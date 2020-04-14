@@ -1,3 +1,3 @@
 # Shortcut-Manager
 
-https://imgur.com/5fIfJLK
+[Imgur](https://imgur.com/5fIfJLK)
