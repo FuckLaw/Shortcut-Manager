@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -28,6 +28,7 @@ namespace Shortcut_Manager
             metroTabPage2.Text = "Settings";
             testeToolStripMenuItem.Text = "Edit";
             removeToolStripMenuItem.Text = "Remove";
+            openFolderToolStripMenuItem.Text = "Open Folder";
             cbb_category.Items.Clear();
             cbb_category.Items.Add("All");
             cbb_category.Items.Add("Apps");
@@ -62,6 +63,7 @@ namespace Shortcut_Manager
             metroTabPage2.Text = "Configurações";
             testeToolStripMenuItem.Text = "Editar";
             removeToolStripMenuItem.Text = "Remover";
+            openFolderToolStripMenuItem.Text = "Abrir Pasta";
             cbb_category.Items.Clear();
             cbb_category.Items.Add("Todos");
             cbb_category.Items.Add("Apps");
@@ -126,6 +128,27 @@ namespace Shortcut_Manager
                         MessageBox.Show("File removed from destination folder!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
                         MessageBox.Show("Arquivo não encontrado na pasta destino!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    for (int i = 1; i < IniFile.GetSectionNames().Length; i++)
+                    {
+                        if (!File.Exists(IniFile.Read(IniFile.GetSectionNames()[i], "Path")))
+                        {
+                            if (rdb_language_en_us.Checked)
+                            {
+                                MessageBox.Show("'" + IniFile.Read(IniFile.GetSectionNames()[i], "Path") + "'" +
+                                    " was not found and has been removed!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else
+                            {
+                                MessageBox.Show("'" + IniFile.Read(IniFile.GetSectionNames()[i], "Path") + "'" +
+                                    " não foi encontrado e foi removido!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            IniFile.Clear_Section(IniFile.GetSectionNames()[i]);
+                            Imagelist.Images.Clear();
+                        }
+                    }
+                    Refresh_ListView();
+
                     return;
                 }
 
@@ -136,6 +159,26 @@ namespace Shortcut_Manager
                         MessageBox.Show("File removed from destination folder!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
                         MessageBox.Show("Arquivo não encontrado na pasta destino!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    for (int i = 1; i < IniFile.GetSectionNames().Length; i++)
+                    {
+                        if (!Directory.Exists(IniFile.Read(IniFile.GetSectionNames()[i], "Path")))
+                        {
+                            if (rdb_language_en_us.Checked)
+                            {
+                                MessageBox.Show("'" + IniFile.Read(IniFile.GetSectionNames()[i], "Path") + "'" +
+                                    " was not found and has been removed!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else
+                            {
+                                MessageBox.Show("'" + IniFile.Read(IniFile.GetSectionNames()[i], "Path") + "'" +
+                                    " não foi encontrado e foi removido!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            IniFile.Clear_Section(IniFile.GetSectionNames()[i]);
+                            Imagelist.Images.Clear();
+                        }
+                    }
+                    Refresh_ListView();
                     return;
                 }
 
@@ -173,7 +216,7 @@ namespace Shortcut_Manager
                 Imagelist.Images.Clear();
                 for (int i = 1; i < IniFile.GetSectionNames().Length; i++)
                 {
-                    if (!File.Exists(IniFile.Read(IniFile.GetSectionNames()[i], "Path")))
+                    if (!File.Exists(IniFile.Read(IniFile.GetSectionNames()[i], "Path")) && IniFile.Read(IniFile.GetSectionNames()[i], "Folder") == "false")
                     {
                         if (rdb_language_en_us.Checked)
                         {
@@ -185,10 +228,27 @@ namespace Shortcut_Manager
                             MessageBox.Show("'" + IniFile.Read(IniFile.GetSectionNames()[i], "Path") + "'" +
                                 " não foi encontrado e foi removido!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-
                         IniFile.Clear_Section(IniFile.GetSectionNames()[i]);
                         Imagelist.Images.Clear();
                     }
+
+                
+                    if (!Directory.Exists(IniFile.Read(IniFile.GetSectionNames()[i], "Path")) && IniFile.Read(IniFile.GetSectionNames()[i], "Folder") == "true")
+                    {
+                        if (rdb_language_en_us.Checked)
+                        {
+                            MessageBox.Show("'" + IniFile.Read(IniFile.GetSectionNames()[i], "Path") + "'" +
+                                " was not found and has been removed!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("'" + IniFile.Read(IniFile.GetSectionNames()[i], "Path") + "'" +
+                                " não foi encontrado e foi removido!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        IniFile.Clear_Section(IniFile.GetSectionNames()[i]);
+                        Imagelist.Images.Clear();
+                    }
+
 
                     if (cbb_category.SelectedItem.ToString() == "All" || cbb_category.SelectedItem.ToString() == "Todos")
                     {
